@@ -180,3 +180,21 @@ test("showReminder buffers initial state until reminder content finishes loading
   reminderWindow.webContentsEvents.emit("did-finish-load");
   assert.deepEqual(reminderWindow.sentMessages, [["state:changed", initialState]]);
 });
+
+test("reminder windows use content-size semantics and enforce a taller minimum height", () => {
+  const { createWindowManager, createdWindows } = loadWindowManagerWithFakes();
+  const manager = createWindowManager({ assetRootDir: "C:\\fake-root" });
+
+  manager.showReminder(
+    { reminderId: "r-3" },
+    {
+      mainWindow: { width: 420, height: 640 },
+      reminderWindow: { width: 380, height: 240, position: "bottom_right" }
+    },
+    null
+  );
+
+  const reminderWindow = createdWindows[0];
+  assert.equal(reminderWindow.options.useContentSize, true);
+  assert.equal(reminderWindow.options.height, 320);
+});

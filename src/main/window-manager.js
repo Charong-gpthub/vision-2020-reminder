@@ -1,6 +1,8 @@
 const path = require("node:path");
 const { BrowserWindow, screen } = require("electron/main");
 
+const REMINDER_WINDOW_MIN_HEIGHT = 320;
+
 function createWindowManager({ assetRootDir }) {
   const preloadPath = path.join(assetRootDir, "preload.js");
   const dashboardHtmlPath = path.join(assetRootDir, "src", "ui", "dashboard.html");
@@ -35,6 +37,14 @@ function createWindowManager({ assetRootDir }) {
     if (reminderConfig.position === "bottom_right") {
       windowInstance.setPosition(x, y);
     }
+  }
+
+  function normalizeReminderWindowConfig(reminderConfig) {
+    return {
+      ...reminderConfig,
+      width: Math.max(reminderConfig.width, 380),
+      height: Math.max(reminderConfig.height, REMINDER_WINDOW_MIN_HEIGHT)
+    };
   }
 
   function revealReminderWindow(windowInstance) {
@@ -104,12 +114,14 @@ function createWindowManager({ assetRootDir }) {
       return reminderWindow;
     }
 
+    const reminderWindowConfig = normalizeReminderWindowConfig(config.reminderWindow);
     reminderReadyToShow = false;
     reminderContentLoaded = false;
     pendingReminderState = null;
     reminderWindow = new BrowserWindow({
-      width: config.reminderWindow.width,
-      height: config.reminderWindow.height,
+      width: reminderWindowConfig.width,
+      height: reminderWindowConfig.height,
+      useContentSize: true,
       resizable: false,
       maximizable: false,
       minimizable: false,
@@ -146,7 +158,7 @@ function createWindowManager({ assetRootDir }) {
       reminderContentLoaded = false;
       pendingReminderState = null;
     });
-    setReminderPosition(reminderWindow, config.reminderWindow);
+    setReminderPosition(reminderWindow, reminderWindowConfig);
 
     return reminderWindow;
   }
@@ -185,7 +197,7 @@ function createWindowManager({ assetRootDir }) {
     },
     showReminder(reminder, config, initialState) {
       const reminderInstance = ensureReminderWindow(config);
-      setReminderPosition(reminderInstance, config.reminderWindow);
+      setReminderPosition(reminderInstance, normalizeReminderWindowConfig(config.reminderWindow));
       if (initialState) {
         pendingReminderState = initialState;
         flushPendingReminderState();

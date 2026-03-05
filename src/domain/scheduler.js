@@ -116,19 +116,21 @@ function createScheduler({
   }
 
   function updateConfig(nextConfig, now = new Date()) {
+    const nowDate = toDate(now);
+    const nowMs = nowDate.getTime();
     const previousIntervalMs = intervalMs;
     intervalMs = nextConfig.intervalSec * 1000;
     snoozeDefaultMs = nextConfig.snoozeDefaultSec * 1000;
+    lastTickAtMs = nowMs;
 
-    if (!activeReminder && nextReason === "INTERVAL" && previousIntervalMs !== intervalMs) {
-      nextDueAtMs = computeNextIntervalSlot({
-        anchorAt: new Date(anchorAtMs),
-        intervalSec: nextConfig.intervalSec,
-        now
-      }).getTime();
+    if (previousIntervalMs !== intervalMs) {
+      anchorAtMs = nowMs;
+      nextDueAtMs = nowMs + intervalMs;
+      nextReason = "INTERVAL";
+      pendingParentReminderId = null;
     }
 
-    return getState(now);
+    return getState(nowDate);
   }
 
   return {

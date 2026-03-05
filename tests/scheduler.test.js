@@ -91,3 +91,53 @@ test("scheduler emits a single overdue resume reminder after a long clock gap", 
   assert.equal(state.nextDueAt, "2026-03-06T10:00:00.000Z");
   assert.equal(state.nextReason, "INTERVAL");
 });
+
+test("scheduler resets countdown and next due from the config save time", () => {
+  const scheduler = createScheduler({
+    launchAt: new Date("2026-03-06T09:00:00.000Z"),
+    intervalSec: 1200,
+    snoozeDefaultSec: 300
+  });
+
+  const state = scheduler.updateConfig(
+    {
+      intervalSec: 600,
+      snoozeDefaultSec: 300
+    },
+    new Date("2026-03-06T09:05:00.000Z")
+  );
+
+  assert.equal(state.anchorAt, "2026-03-06T09:05:00.000Z");
+  assert.equal(state.nextDueAt, "2026-03-06T09:15:00.000Z");
+  assert.equal(state.msUntilDue, 600_000);
+  assert.equal(state.nextReason, "INTERVAL");
+});
+
+test("scheduler resets from config save time even when a snooze was pending", () => {
+  const scheduler = createScheduler({
+    launchAt: new Date("2026-03-06T09:00:00.000Z"),
+    intervalSec: 1200,
+    snoozeDefaultSec: 300
+  });
+
+  const firstDue = scheduler.tick(new Date("2026-03-06T09:20:00.000Z"));
+  scheduler.applyAction({
+    reminderId: firstDue.reminder.reminderId,
+    action: "SNOOZE",
+    elapsedSec: 2,
+    now: new Date("2026-03-06T09:20:02.000Z")
+  });
+
+  const state = scheduler.updateConfig(
+    {
+      intervalSec: 900,
+      snoozeDefaultSec: 300
+    },
+    new Date("2026-03-06T09:22:00.000Z")
+  );
+
+  assert.equal(state.anchorAt, "2026-03-06T09:22:00.000Z");
+  assert.equal(state.nextDueAt, "2026-03-06T09:37:00.000Z");
+  assert.equal(state.msUntilDue, 900_000);
+  assert.equal(state.nextReason, "INTERVAL");
+});
