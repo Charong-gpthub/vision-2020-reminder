@@ -1,14 +1,6 @@
 const { buildReminder, createReminderId } = require("./reminder-state");
 const { toDate } = require("./time");
 
-function computeNextIntervalSlot({ anchorAt, intervalSec, now }) {
-  const anchorMs = toDate(anchorAt).getTime();
-  const nowMs = toDate(now).getTime();
-  const intervalMs = intervalSec * 1000;
-  const slotIndex = Math.floor((nowMs - anchorMs) / intervalMs) + 1;
-  return new Date(anchorMs + Math.max(slotIndex, 1) * intervalMs);
-}
-
 function createScheduler({
   launchAt,
   intervalSec,
@@ -102,11 +94,8 @@ function createScheduler({
       nextReason = "SNOOZE";
       pendingParentReminderId = activeReminder.reminderId;
     } else {
-      nextDueAtMs = computeNextIntervalSlot({
-        anchorAt: new Date(anchorAtMs),
-        intervalSec: intervalMs / 1000,
-        now: nowDate
-      }).getTime();
+      anchorAtMs = nowMs;
+      nextDueAtMs = nowMs + intervalMs;
       nextReason = "INTERVAL";
       pendingParentReminderId = null;
     }
@@ -142,6 +131,5 @@ function createScheduler({
 }
 
 module.exports = {
-  computeNextIntervalSlot,
   createScheduler
 };
