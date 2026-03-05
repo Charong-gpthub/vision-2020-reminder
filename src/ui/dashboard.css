@@ -1,0 +1,150 @@
+:root {
+  color-scheme: light;
+  --bg: #f6efe4;
+  --panel: rgba(255, 250, 243, 0.92);
+  --panel-strong: #fff8ef;
+  --ink: #2f2418;
+  --muted: #776453;
+  --accent: #cb6d39;
+  --line: rgba(80, 55, 34, 0.12);
+  --shadow: 0 18px 40px rgba(77, 52, 34, 0.12);
+  font-family: "Segoe UI Variable", "Bahnschrift", "Microsoft YaHei UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(255, 212, 176, 0.8), transparent 32%),
+    linear-gradient(160deg, #f8f0e5 0%, #f2e0cb 52%, #ecd8c2 100%);
+  color: var(--ink);
+}
+
+.dashboard-shell {
+  padding: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.hero-card,
+.metric-card,
+.controls-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.hero-card {
+  padding: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hero-card h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.15;
+}
+
+.session-meta {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.metric-card {
+  padding: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.metric-card.accent {
+  background: linear-gradient(160deg, rgba(255, 246, 235, 0.98), rgba(246, 214, 195, 0.88));
+}
+
+.metric-card.wide {
+  grid-column: 1 / -1;
+}
+
+.metric-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.metric-value {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.metric-note {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.controls-card {
+  padding: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+.toggle-row input {
+  width: 18px;
+  height: 18px;
+}
+
+.action-button {
+  border: none;
+  border-radius: 16px;
+  padding: 14px 16px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.action-button.subtle {
+  background: var(--panel-strong);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.action-button.strong {
+  background: var(--accent);
+  color: #fff8f0;
+}
+
+@media (max-width: 480px) {
+  .dashboard-shell {
+    padding: 16px;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-card.wide {
+    grid-column: auto;
+  }
+}

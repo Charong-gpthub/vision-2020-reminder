@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>20-20-20 视力提醒器</title>
+  <link rel="stylesheet" href="./dashboard.css">
+</head>
+<body>
+  <main class="dashboard-shell">
+    <section class="hero-card">
+      <p class="eyebrow">20-20-20 Vision</p>
+      <h1>让提醒稳定出现，但不过度打扰。</h1>
+      <p id="session-meta" class="session-meta">正在读取状态...</p>
+    </section>
+
+    <section class="status-grid">
+      <article class="metric-card accent">
+        <span class="metric-label">下次提醒</span>
+        <strong id="next-due" class="metric-value">--</strong>
+        <span id="next-reason" class="metric-note">--</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">倒计时</span>
+        <strong id="countdown" class="metric-value">--:--</strong>
+        <span class="metric-note">主进程每秒同步</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">今日完成</span>
+        <strong id="done-count" class="metric-value">0</strong>
+        <span class="metric-note">DONE</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">今日跳过</span>
+        <strong id="skip-count" class="metric-value">0</strong>
+        <span class="metric-note">SKIP</span>
+      </article>
+      <article class="metric-card wide">
+        <span class="metric-label">完成率</span>
+        <strong id="completion-rate" class="metric-value">N/A</strong>
+        <span id="action-total" class="metric-note">0 次有效动作</span>
+      </article>
+    </section>
+
+    <section class="controls-card">
+      <label class="toggle-row" for="sound-enabled">
+        <span>声音提醒</span>
+        <input id="sound-enabled" type="checkbox">
+      </label>
+      <button id="open-data-dir" class="action-button subtle" type="button">打开数据目录</button>
+      <button id="quit-app" class="action-button strong" type="button">退出应用</button>
+    </section>
+  </main>
+  <script src="./dashboard.js" defer></script>
+</body>
+</html>

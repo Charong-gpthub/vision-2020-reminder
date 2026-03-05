@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>20-20-20 提醒</title>
+  <link rel="stylesheet" href="./reminder.css">
+</head>
+<body>
+  <main class="reminder-shell">
+    <div class="glow"></div>
+    <section class="reminder-card">
+      <p class="eyebrow">20-20-20</p>
+      <h1>看看 20 英尺外的地方，休息 20 秒。</h1>
+      <div id="countdown" class="countdown">20</div>
+      <p id="helper-text" class="helper-text">倒计时结束后，窗口会保持打开，等你确认。</p>
+      <div class="button-row">
+        <button id="done-button" class="primary" type="button">完成</button>
+        <button id="skip-button" class="secondary" type="button">跳过</button>
+        <button id="snooze-button" class="secondary" type="button">延后 5 分钟</button>
+      </div>
+    </section>
+  </main>
+  <script src="./reminder.js" defer></script>
+</body>
+</html>
