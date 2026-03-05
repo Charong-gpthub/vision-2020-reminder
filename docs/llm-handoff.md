@@ -30,7 +30,7 @@
 - 注意清除 `ELECTRON_RUN_AS_NODE`
 
 ## 4. 常见任务入口
-- 改提醒节拍： [scheduler.js](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/src/domain/scheduler.js)
+- 改提醒节拍： [scheduler.js](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/src/domain/scheduler.js) 和 [dashboard.js](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/src/ui/dashboard.js)
 - 改日志结构： [log-store.js](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/src/storage/log-store.js) 和 [app-controller.js](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/src/main/app-controller.js)
 - 改统计口径： [stats.js](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/src/domain/stats.js)
 - 改窗口行为： [window-manager.js](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/src/main/window-manager.js)

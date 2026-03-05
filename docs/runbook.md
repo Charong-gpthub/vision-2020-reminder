@@ -16,7 +16,7 @@
 ## 配置项
 - `env`
 - `profile`
-- `intervalSec`
+- `intervalSec`：提醒间隔秒数，默认 `1200`，主窗口按“分钟”编辑
 - `countdownSec`
 - `snoozeDefaultSec`
 - `soundEnabled`

@@ -10,6 +10,9 @@ function createWindowManager({ assetRootDir }) {
   let reminderWindow = null;
   let allowDashboardClose = false;
   let allowReminderClose = false;
+  let reminderReadyToShow = false;
+  let reminderContentLoaded = false;
+  let pendingReminderState = null;
   let closeHandlers = {
     onDashboardCloseRequest: null,
     onReminderCloseRequest: null
@@ -32,6 +35,30 @@ function createWindowManager({ assetRootDir }) {
     if (reminderConfig.position === "bottom_right") {
       windowInstance.setPosition(x, y);
     }
+  }
+
+  function revealReminderWindow(windowInstance) {
+    if (!windowInstance || windowInstance.isDestroyed()) {
+      return;
+    }
+
+    windowInstance.show();
+    windowInstance.focus();
+    windowInstance.setAlwaysOnTop(true, "screen-saver");
+  }
+
+  function flushPendingReminderState() {
+    if (
+      !reminderWindow ||
+      reminderWindow.isDestroyed() ||
+      !reminderContentLoaded ||
+      !pendingReminderState
+    ) {
+      return;
+    }
+
+    reminderWindow.webContents.send("state:changed", pendingReminderState);
+    pendingReminderState = null;
   }
 
   function ensureDashboardWindow(config) {
@@ -77,6 +104,9 @@ function createWindowManager({ assetRootDir }) {
       return reminderWindow;
     }
 
+    reminderReadyToShow = false;
+    reminderContentLoaded = false;
+    pendingReminderState = null;
     reminderWindow = new BrowserWindow({
       width: config.reminderWindow.width,
       height: config.reminderWindow.height,
@@ -91,9 +121,13 @@ function createWindowManager({ assetRootDir }) {
     });
 
     reminderWindow.loadFile(reminderHtmlPath);
+    reminderWindow.webContents.on("did-finish-load", () => {
+      reminderContentLoaded = true;
+      flushPendingReminderState();
+    });
     reminderWindow.once("ready-to-show", () => {
-      reminderWindow.show();
-      reminderWindow.focus();
+      reminderReadyToShow = true;
+      revealReminderWindow(reminderWindow);
     });
     reminderWindow.on("close", (event) => {
       if (allowReminderClose) {
@@ -108,6 +142,9 @@ function createWindowManager({ assetRootDir }) {
     reminderWindow.on("closed", () => {
       reminderWindow = null;
       allowReminderClose = false;
+      reminderReadyToShow = false;
+      reminderContentLoaded = false;
+      pendingReminderState = null;
     });
     setReminderPosition(reminderWindow, config.reminderWindow);
 
@@ -149,11 +186,12 @@ function createWindowManager({ assetRootDir }) {
     showReminder(reminder, config, initialState) {
       const reminderInstance = ensureReminderWindow(config);
       setReminderPosition(reminderInstance, config.reminderWindow);
-      reminderInstance.show();
-      reminderInstance.focus();
-      reminderInstance.setAlwaysOnTop(true, "screen-saver");
       if (initialState) {
-        reminderInstance.webContents.send("state:changed", initialState);
+        pendingReminderState = initialState;
+        flushPendingReminderState();
+      }
+      if (reminderReadyToShow) {
+        revealReminderWindow(reminderInstance);
       }
     }
   };

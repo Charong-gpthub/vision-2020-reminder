@@ -43,6 +43,24 @@
     </section>
 
     <section class="controls-card">
+      <form id="interval-form" class="interval-form">
+        <label class="field-stack" for="interval-minutes">
+          <span>提醒间隔</span>
+          <span class="field-hint">单位：分钟，默认 20</span>
+        </label>
+        <div class="interval-row">
+          <input
+            id="interval-minutes"
+            class="numeric-input"
+            type="number"
+            min="0.1"
+            step="0.1"
+            inputmode="decimal"
+          >
+          <button class="action-button subtle compact" type="submit">保存</button>
+        </div>
+        <p id="interval-feedback" class="form-feedback" aria-live="polite"></p>
+      </form>
       <label class="toggle-row" for="sound-enabled">
         <span>声音提醒</span>
         <input id="sound-enabled" type="checkbox">
