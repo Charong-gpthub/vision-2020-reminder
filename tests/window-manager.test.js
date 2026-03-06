@@ -32,7 +32,9 @@ function createEventHub() {
   };
 }
 
-function loadWindowManagerWithFakes() {
+function loadWindowManagerWithFakes({
+  workArea = { x: 0, y: 0, width: 1600, height: 900 }
+} = {}) {
   const createdWindows = [];
 
   class FakeBrowserWindow {
@@ -114,7 +116,7 @@ function loadWindowManagerWithFakes() {
     screen: {
       getPrimaryDisplay() {
         return {
-          workArea: { x: 0, y: 0, width: 1600, height: 900 }
+          workArea
         };
       }
     }
@@ -162,7 +164,6 @@ test("showReminder waits for ready-to-show before displaying a new reminder wind
   reminderWindow.emit("ready-to-show");
   assert.equal(reminderWindow.showCount, 1);
 });
-
 test("showReminder buffers initial state until reminder content finishes loading", () => {
   const { createWindowManager, createdWindows } = loadWindowManagerWithFakes();
   const manager = createWindowManager({ assetRootDir: "C:\\fake-root" });
@@ -197,6 +198,33 @@ test("reminder windows use content-size semantics and enforce a taller minimum h
   const reminderWindow = createdWindows[0];
   assert.equal(reminderWindow.options.useContentSize, true);
   assert.equal(reminderWindow.options.autoHideMenuBar, true);
-  assert.equal(reminderWindow.options.width, 420);
+  assert.equal(reminderWindow.options.width, 480);
   assert.equal(reminderWindow.options.height, 420);
+});
+
+test("reminder windows scale up on large displays so the popup is not too small", () => {
+  const { createWindowManager, createdWindows } = loadWindowManagerWithFakes({
+    workArea: { x: 0, y: 0, width: 1920, height: 1080 }
+  });
+  const manager = createWindowManager({ assetRootDir: "C:\\fake-root" });
+
+  manager.showReminder({ reminderId: "r-4" }, createConfig(), null);
+
+  const reminderWindow = createdWindows[0];
+  assert.equal(reminderWindow.options.width, 560);
+  assert.equal(reminderWindow.options.height, 454);
+});
+
+test("reminder windows still fit inside small displays", () => {
+  const { createWindowManager, createdWindows } = loadWindowManagerWithFakes({
+    workArea: { x: 0, y: 0, width: 500, height: 450 }
+  });
+  const manager = createWindowManager({ assetRootDir: "C:\\fake-root" });
+
+  manager.showReminder({ reminderId: "r-5" }, createConfig(), null);
+
+  const reminderWindow = createdWindows[0];
+  assert.equal(reminderWindow.options.width, 420);
+  assert.equal(reminderWindow.options.height, 402);
+  assert.deepEqual(reminderWindow.position, [56, 24]);
 });

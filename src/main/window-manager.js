@@ -1,8 +1,13 @@
 const path = require("node:path");
 const { BrowserWindow, screen } = require("electron/main");
 
+const REMINDER_WINDOW_MARGIN = 24;
 const REMINDER_WINDOW_MIN_WIDTH = 420;
 const REMINDER_WINDOW_MIN_HEIGHT = 420;
+const REMINDER_WINDOW_MAX_WIDTH = 560;
+const REMINDER_WINDOW_MAX_HEIGHT = 520;
+const REMINDER_WINDOW_WIDTH_RATIO = 0.3;
+const REMINDER_WINDOW_HEIGHT_RATIO = 0.42;
 
 function createWindowManager({ assetRootDir }) {
   const preloadPath = path.join(assetRootDir, "preload.js");
@@ -33,18 +38,39 @@ function createWindowManager({ assetRootDir }) {
     const display = screen.getPrimaryDisplay();
     const bounds = display.workArea;
     const [width, height] = windowInstance.getSize();
-    const x = Math.max(bounds.x, bounds.x + bounds.width - width - 24);
-    const y = Math.max(bounds.y, bounds.y + bounds.height - height - 24);
+    const x = Math.max(bounds.x, bounds.x + bounds.width - width - REMINDER_WINDOW_MARGIN);
+    const y = Math.max(bounds.y, bounds.y + bounds.height - height - REMINDER_WINDOW_MARGIN);
     if (reminderConfig.position === "bottom_right") {
       windowInstance.setPosition(x, y);
     }
   }
 
+  function clampToRange(value, minValue, maxValue) {
+    return Math.max(minValue, Math.min(value, maxValue));
+  }
+
   function normalizeReminderWindowConfig(reminderConfig) {
+    const display = screen.getPrimaryDisplay();
+    const bounds = display.workArea;
+    const maxWidth = Math.max(320, bounds.width - REMINDER_WINDOW_MARGIN * 2);
+    const maxHeight = Math.max(320, bounds.height - REMINDER_WINDOW_MARGIN * 2);
+    const preferredWidth = Math.max(
+      reminderConfig.width,
+      Math.round(bounds.width * REMINDER_WINDOW_WIDTH_RATIO)
+    );
+    const preferredHeight = Math.max(
+      reminderConfig.height,
+      Math.round(bounds.height * REMINDER_WINDOW_HEIGHT_RATIO)
+    );
+    const minWidth = Math.min(REMINDER_WINDOW_MIN_WIDTH, maxWidth);
+    const minHeight = Math.min(REMINDER_WINDOW_MIN_HEIGHT, maxHeight);
+    const boundedMaxWidth = Math.max(minWidth, Math.min(REMINDER_WINDOW_MAX_WIDTH, maxWidth));
+    const boundedMaxHeight = Math.max(minHeight, Math.min(REMINDER_WINDOW_MAX_HEIGHT, maxHeight));
+
     return {
       ...reminderConfig,
-      width: Math.max(reminderConfig.width, REMINDER_WINDOW_MIN_WIDTH),
-      height: Math.max(reminderConfig.height, REMINDER_WINDOW_MIN_HEIGHT)
+      width: clampToRange(preferredWidth, minWidth, boundedMaxWidth),
+      height: clampToRange(preferredHeight, minHeight, boundedMaxHeight)
     };
   }
 
