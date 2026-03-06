@@ -20,13 +20,14 @@ body {
     radial-gradient(circle at top, rgba(255, 212, 176, 0.9), transparent 35%),
     linear-gradient(165deg, #fff7f0 0%, #f3dfca 100%);
   color: var(--ink);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .reminder-shell {
   position: relative;
   min-height: 100vh;
-  padding: 16px;
+  padding: 14px;
 }
 
 .glow {
@@ -39,14 +40,14 @@ body {
 .reminder-card {
   position: relative;
   z-index: 1;
-  min-height: calc(100vh - 32px);
+  min-height: 100%;
   border-radius: 26px;
   border: 1px solid var(--line);
   background: var(--panel);
-  padding: 22px;
+  padding: 18px;
   display: grid;
-  align-content: center;
-  gap: 14px;
+  align-content: start;
+  gap: 12px;
   box-shadow: 0 22px 46px rgba(92, 60, 34, 0.14);
 }
 
@@ -60,12 +61,12 @@ body {
 
 .reminder-card h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: clamp(22px, 5vw, 28px);
   line-height: 1.15;
 }
 
 .countdown {
-  font-size: 72px;
+  font-size: clamp(56px, 14vw, 72px);
   line-height: 1;
   font-weight: 700;
   color: var(--accent-deep);
@@ -79,14 +80,16 @@ body {
 .button-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 button {
   border: none;
   border-radius: 16px;
-  padding: 12px 10px;
+  min-height: 44px;
+  padding: 10px 8px;
   font: inherit;
+  font-size: 14px;
   cursor: pointer;
 }
 
@@ -111,5 +114,11 @@ button.secondary {
   50% {
     transform: scale(1.04);
     opacity: 1;
+  }
+}
+
+@media (max-width: 390px) {
+  .button-row {
+    grid-template-columns: 1fr;
   }
 }

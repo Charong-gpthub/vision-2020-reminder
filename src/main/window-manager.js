@@ -1,7 +1,8 @@
 const path = require("node:path");
 const { BrowserWindow, screen } = require("electron/main");
 
-const REMINDER_WINDOW_MIN_HEIGHT = 320;
+const REMINDER_WINDOW_MIN_WIDTH = 420;
+const REMINDER_WINDOW_MIN_HEIGHT = 420;
 
 function createWindowManager({ assetRootDir }) {
   const preloadPath = path.join(assetRootDir, "preload.js");
@@ -42,7 +43,7 @@ function createWindowManager({ assetRootDir }) {
   function normalizeReminderWindowConfig(reminderConfig) {
     return {
       ...reminderConfig,
-      width: Math.max(reminderConfig.width, 380),
+      width: Math.max(reminderConfig.width, REMINDER_WINDOW_MIN_WIDTH),
       height: Math.max(reminderConfig.height, REMINDER_WINDOW_MIN_HEIGHT)
     };
   }
@@ -121,6 +122,7 @@ function createWindowManager({ assetRootDir }) {
     reminderWindow = new BrowserWindow({
       width: reminderWindowConfig.width,
       height: reminderWindowConfig.height,
+      autoHideMenuBar: true,
       useContentSize: true,
       resizable: false,
       maximizable: false,

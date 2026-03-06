@@ -196,5 +196,7 @@ test("reminder windows use content-size semantics and enforce a taller minimum h
 
   const reminderWindow = createdWindows[0];
   assert.equal(reminderWindow.options.useContentSize, true);
-  assert.equal(reminderWindow.options.height, 320);
+  assert.equal(reminderWindow.options.autoHideMenuBar, true);
+  assert.equal(reminderWindow.options.width, 420);
+  assert.equal(reminderWindow.options.height, 420);
 });
