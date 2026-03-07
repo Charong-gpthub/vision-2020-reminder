@@ -65,6 +65,13 @@ vision-2020-reminder/
 
 ## 8. 推荐阅读顺序
 1. [docs/INDEX.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/INDEX.md)
-2. [docs/detailed-design.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/detailed-design.md)
-3. [docs/implementation-guide.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/implementation-guide.md)
-4. [docs/llm-handoff.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/llm-handoff.md)
+2. [工作区项目管理](/c:/Users/Administrator/Documents/trae_projects/PROJECT_MANAGEMENT.md)
+3. [docs/current-project-status.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/current-project-status.md)
+4. [docs/detailed-design.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/detailed-design.md)
+5. [docs/implementation-guide.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/implementation-guide.md)
+6. [docs/llm-handoff.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/llm-handoff.md)
+
+## 9. AI 维护入口
+- 工作区总览：[PROJECT_MANAGEMENT.md](/c:/Users/Administrator/Documents/trae_projects/PROJECT_MANAGEMENT.md)
+- 工作区撰写标准：[AI_WORKSPACE_WRITING_STANDARD.md](/c:/Users/Administrator/Documents/trae_projects/AI_WORKSPACE_WRITING_STANDARD.md)
+- 当前项目现状：[docs/current-project-status.md](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/docs/current-project-status.md)
