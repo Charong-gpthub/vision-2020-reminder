@@ -4,6 +4,7 @@ const path = require("node:path");
 const DEFAULT_CONFIG = {
   env: "A",
   profile: "A1",
+  startupMessage: "让提醒稳定出现，但不过度打扰。",
   intervalSec: 1200,
   countdownSec: 20,
   snoozeDefaultSec: 300,

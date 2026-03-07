@@ -36,6 +36,7 @@ function createBootstrapState() {
     config: {
       env: "A",
       profile: "A1",
+      startupMessage: "让提醒稳定出现，但不过度打扰。",
       intervalSec: 1200,
       countdownSec: 20,
       snoozeDefaultSec: 300,
@@ -63,6 +64,7 @@ function createBootstrapState() {
 
 async function loadDashboard() {
   const ids = [
+    "startup-message-heading",
     "session-meta",
     "next-due",
     "next-reason",
@@ -76,7 +78,10 @@ async function loadDashboard() {
     "quit-app",
     "interval-form",
     "interval-minutes",
-    "interval-feedback"
+    "interval-feedback",
+    "startup-message-form",
+    "startup-message-input",
+    "startup-message-feedback"
   ];
 
   const elementMap = new Map(ids.map((id) => [id, new FakeElement(id)]));
@@ -131,6 +136,13 @@ test("dashboard bootstrap renders interval minutes from config", async () => {
   assert.equal(elements["interval-minutes"].value, "20");
 });
 
+test("dashboard bootstrap renders startup message from config", async () => {
+  const { elements } = await loadDashboard();
+
+  assert.equal(elements["startup-message-heading"].textContent, "让提醒稳定出现，但不过度打扰。");
+  assert.equal(elements["startup-message-input"].value, "让提醒稳定出现，但不过度打扰。");
+});
+
 test("dashboard submits updated interval minutes as intervalSec", async () => {
   const { elements, savedSettings } = await loadDashboard();
 
@@ -139,4 +151,15 @@ test("dashboard submits updated interval minutes as intervalSec", async () => {
 
   assert.equal(savedSettings.length, 1);
   assert.equal(savedSettings[0].intervalSec, 1800);
+});
+
+test("dashboard submits updated startup message as startupMessage", async () => {
+  const { elements, savedSettings } = await loadDashboard();
+
+  elements["startup-message-input"].value = "先看远处，再回来继续。";
+  await elements["startup-message-form"].dispatch("submit");
+
+  assert.equal(savedSettings.length, 1);
+  assert.equal(savedSettings[0].startupMessage, "先看远处，再回来继续。");
+  assert.equal(elements["startup-message-heading"].textContent, "先看远处，再回来继续。");
 });

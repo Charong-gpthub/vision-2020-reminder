@@ -109,6 +109,11 @@ body {
   gap: 10px;
 }
 
+.startup-message-form {
+  display: grid;
+  gap: 10px;
+}
+
 .field-stack {
   display: grid;
   gap: 4px;
@@ -126,7 +131,8 @@ body {
   gap: 10px;
 }
 
-.numeric-input {
+.numeric-input,
+.message-input {
   width: 100%;
   min-width: 0;
   border: 1px solid var(--line);
@@ -135,6 +141,11 @@ body {
   font: inherit;
   color: var(--ink);
   background: var(--panel-strong);
+}
+
+.message-input {
+  min-height: 92px;
+  resize: vertical;
 }
 
 .form-feedback {

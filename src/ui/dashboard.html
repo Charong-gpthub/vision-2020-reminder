@@ -10,7 +10,7 @@
   <main class="dashboard-shell">
     <section class="hero-card">
       <p class="eyebrow">20-20-20 Vision</p>
-      <h1>让提醒稳定出现，但不过度打扰。</h1>
+      <h1 id="startup-message-heading">让提醒稳定出现，但不过度打扰。</h1>
       <p id="session-meta" class="session-meta">正在读取状态...</p>
     </section>
 
@@ -43,6 +43,22 @@
     </section>
 
     <section class="controls-card">
+      <form id="startup-message-form" class="startup-message-form">
+        <label class="field-stack" for="startup-message-input">
+          <span>启动文字</span>
+          <span class="field-hint">显示在主窗口顶部，支持自定义一句提醒语</span>
+        </label>
+        <textarea
+          id="startup-message-input"
+          class="message-input"
+          rows="3"
+          maxlength="80"
+        ></textarea>
+        <div class="interval-row">
+          <p id="startup-message-feedback" class="form-feedback" aria-live="polite"></p>
+          <button class="action-button subtle compact" type="submit">保存文字</button>
+        </div>
+      </form>
       <form id="interval-form" class="interval-form">
         <label class="field-stack" for="interval-minutes">
           <span>提醒间隔</span>

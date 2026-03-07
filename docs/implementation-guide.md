@@ -100,9 +100,11 @@
 [dashboard.js](/c:/Users/Administrator/Documents/trae_projects/vision-2020-reminder/src/ui/dashboard.js)
 
 职责：
+- 展示可配置的启动文字
 - 读取 `bootstrap:get`
 - 监听 `state:changed`
 - 展示下一次提醒、倒计时、统计信息
+- 保存启动文字
 - 调整提醒间隔，默认 20 分钟
 - 切换声音开关
 - 打开数据目录

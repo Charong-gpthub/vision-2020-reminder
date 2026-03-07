@@ -1,3 +1,5 @@
+const DEFAULT_STARTUP_MESSAGE = "让提醒稳定出现，但不过度打扰。";
+
 function formatDateTime(isoValue) {
   if (!isoValue) {
     return "--";
@@ -34,6 +36,11 @@ function formatIntervalMinutes(intervalSec) {
   return String(Number(minutes.toFixed(2)));
 }
 
+function normalizeStartupMessage(startupMessage) {
+  const value = String(startupMessage || "").trim();
+  return value || DEFAULT_STARTUP_MESSAGE;
+}
+
 function parseIntervalSeconds(rawValue) {
   const minutes = Number.parseFloat(String(rawValue).trim());
   if (!Number.isFinite(minutes) || minutes <= 0) {
@@ -44,6 +51,10 @@ function parseIntervalSeconds(rawValue) {
 }
 
 const elements = {
+  startupMessageHeading: document.getElementById("startup-message-heading"),
+  startupMessageForm: document.getElementById("startup-message-form"),
+  startupMessageInput: document.getElementById("startup-message-input"),
+  startupMessageFeedback: document.getElementById("startup-message-feedback"),
   sessionMeta: document.getElementById("session-meta"),
   nextDue: document.getElementById("next-due"),
   nextReason: document.getElementById("next-reason"),
@@ -66,6 +77,7 @@ let latestState = null;
 function render(state) {
   latestState = state;
   const { config, session, schedulerState, todayStats } = state;
+  elements.startupMessageHeading.textContent = normalizeStartupMessage(config.startupMessage);
   elements.sessionMeta.textContent =
     `会话 ${session.sessionId.slice(0, 8)} · 启动于 ${formatDateTime(session.launchAt)}`;
   elements.nextDue.textContent = formatDateTime(schedulerState.nextDueAt);
@@ -76,6 +88,9 @@ function render(state) {
   elements.completionRate.textContent = todayStats.completionRateLabel;
   elements.actionTotal.textContent = `${todayStats.actionTotal} 次有效动作`;
   elements.soundEnabled.checked = Boolean(config.soundEnabled);
+  if (document.activeElement !== elements.startupMessageInput) {
+    elements.startupMessageInput.value = normalizeStartupMessage(config.startupMessage);
+  }
   if (document.activeElement !== elements.intervalMinutes) {
     elements.intervalMinutes.value = formatIntervalMinutes(config.intervalSec);
   }
@@ -91,6 +106,46 @@ elements.soundEnabled.addEventListener("change", async (event) => {
   await window.visionApi.updateSettings({
     soundEnabled: event.target.checked
   });
+});
+
+elements.startupMessageInput.addEventListener("input", () => {
+  elements.startupMessageFeedback.textContent = "";
+});
+
+elements.startupMessageForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const startupMessage = String(elements.startupMessageInput.value || "").trim();
+  if (!startupMessage) {
+    if (latestState) {
+      elements.startupMessageInput.value = normalizeStartupMessage(latestState.config.startupMessage);
+    }
+    elements.startupMessageFeedback.textContent = "启动文字不能为空";
+    return;
+  }
+
+  if (latestState && startupMessage === normalizeStartupMessage(latestState.config.startupMessage)) {
+    elements.startupMessageFeedback.textContent = "启动文字未变化";
+    return;
+  }
+
+  elements.startupMessageFeedback.textContent = "保存中...";
+
+  try {
+    const updatedConfig = await window.visionApi.updateSettings({ startupMessage });
+    if (latestState) {
+      render({
+        ...latestState,
+        config: updatedConfig
+      });
+    } else {
+      elements.startupMessageHeading.textContent = normalizeStartupMessage(updatedConfig.startupMessage);
+      elements.startupMessageInput.value = normalizeStartupMessage(updatedConfig.startupMessage);
+    }
+    elements.startupMessageFeedback.textContent = "启动文字已保存";
+  } catch (_error) {
+    elements.startupMessageFeedback.textContent = "保存失败，请重试";
+  }
 });
 
 elements.intervalMinutes.addEventListener("input", () => {

@@ -16,6 +16,7 @@
 ## 配置项
 - `env`
 - `profile`
+- `startupMessage`：主窗口顶部启动文字，默认 `让提醒稳定出现，但不过度打扰。`
 - `intervalSec`：提醒间隔秒数，默认 `1200`，主窗口按“分钟”编辑
 - `countdownSec`
 - `snoozeDefaultSec`
@@ -29,6 +30,9 @@
 - 打包模式：可执行文件同级 `data/`
 
 ## 常见故障与处理
+- 症状：启动文字保存后没有变化
+  - 检查 `data/config.json` 中的 `startupMessage`
+  - 重新启动应用确认是否被旧配置覆盖
 - 症状：Electron 启动后像普通 Node 进程一样失败
   - 检查 `ELECTRON_RUN_AS_NODE`
   - 必须通过 `scripts/run-electron.cmd` 启动
